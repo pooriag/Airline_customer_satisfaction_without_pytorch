@@ -8,6 +8,8 @@ import logistic_regression_model
 
 
 def data_clean(df):
+    df = df.dropna(how='any')
+
     df = df.replace(to_replace='satisfied', value=1)
     df = df.replace(to_replace='dissatisfied', value=0)
     ##
@@ -15,7 +17,7 @@ def data_clean(df):
     df = df.replace(to_replace='Male', value=1)
     ##
     df = df.replace(to_replace='disloyal Customer', value=0)
-    df = df.replace(to_replace='Loyal Customer', value=0)
+    df = df.replace(to_replace='Loyal Customer', value=1)
     ##
     df = df.replace(to_replace='Personal Travel', value=0)
     df = df.replace(to_replace='Business travel', value=1)
@@ -51,13 +53,13 @@ evaluation_data = norm_df[(norm_df.index % 3 == 2) & (norm_df.index % 2 == 1)]
 
 M = logistic_regression_model.logistic_model(len(norm_df.columns) - 1)
 
-cad.train(train_data, 50, 100, M)
+cad.train(train_data, 150, 1000, M)
 
 test_sample = csv_as_dataset.random_sample(test_data, 20)
 for i in range(len(test_sample)):
     print(f'actual value{test_sample["satisfaction"].iloc[i]}')
 
-    x = test_sample["satisfaction"]
+    x = test_sample.drop("satisfaction", axis=1)
     X = np.array(x.values.tolist()[i]).T
     print(f'prediction{M.forward(X)}')
     print("..............................")

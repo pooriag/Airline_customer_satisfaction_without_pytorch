@@ -32,8 +32,8 @@ class logistic_model():
             dw = np.dot(X, (A - Y).T) / m
             db = np.sum(A - Y) / m
 
-            self.weights = self.weights - learning_rate * dw
-            self.b  = self.b - learning_rate * db
+            self.weights = self.weights + learning_rate * dw
+            self.b  = self.b + learning_rate * db
             if i == 0:
                 self.losses.append(self.cost(X, Y))
             if i % 100 == 0:
@@ -42,6 +42,7 @@ class logistic_model():
     def cost(self, X, Y):
         Y_hat = self.forward(X)
         m = X.shape[1]
+
         losses = -(Y * np.log(Y_hat) + (1 - Y) * np.log(1 - Y_hat))
 
         return np.sum(losses) / m
